@@ -1,7 +1,12 @@
 pipeline {
     agent any
     stages {
-		
+		stage('Build') {
+			steps {
+			echo 'Compilando el cdigo...'
+			// comandos de compilacin aqu
+			}
+		}
 		
 		// ******ALL CODE TO BE ADDED BELOW THIS COMMENT******
 		
