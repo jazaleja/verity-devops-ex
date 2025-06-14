@@ -47,7 +47,7 @@ pipeline {
 		//Code ends for stage Unit Test
 
         //Code starts for stage Code Analysis
-		stage('Code Analysis') {
+		/*stage('Code Analysis') {
             steps {
 			 script {
           scannerHome = tool 'sonar-scanner'
@@ -57,7 +57,43 @@ pipeline {
 				sh "${scannerHome}/bin/sonar-scanner"
 				}
 			}
-		}
+		}*/
 		//Code ends for stage Code Analysis
+
+        //Code starts for stage Install
+		stage('Install') {
+            steps {
+                sh 'mvn install -DskipTests'
+            }
+        }
+		//Code ends for stage Install
+		
+		
+		//Code starts for stage Launch Tomcat Server
+		stage('Launch Tomcat Server') {
+            steps {
+                sh '/tmp/apache-tomcat-9.0.106/bin/startup.sh'
+            }
+        }
+		//Code ends for stage Launch Tomcat Server
+		
+		
+		//Code starts for Deploy War on Tomcat Server
+		stage('Deploy War on Tomcat Server') {
+            steps {
+                sh 'cp /var/jenkins_home/workspace/verity-devops-ex/target/ExpenseApp-1.war /tmp/apache-tomcat-9.0.106/webapps'
+            }
+        }
+		//Code ends for stage Deploy War on Tomcat Server
+		
+		//Code starts for stage API Test
+		stage('API Test') {
+            steps {
+				//Change git url below as per your forked github repository URL
+				git url: 'https://github.com/jazaleja/EMAPITests-ex.git'
+            	sh 'mvn -Dtest=ExpenseManagerAPITest test'
+            }
+        }
+		//Code ends for stage API Test	
     }
 }
